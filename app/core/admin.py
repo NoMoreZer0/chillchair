@@ -1,9 +1,29 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.db.models import JSONField
+from django_json_widget.widgets import JSONEditorWidget
 
-from app.core.models import User
+from app.core.models import User, Chair, ChairImage
 
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    pass
+    list_display = ("id", "email", "first_name", "last_name")
+
+class ChairImageInline(admin.StackedInline):
+    model = ChairImage
+    extra = 0
+
+@admin.register(ChairImage)
+class ChairImageAdmin(admin.ModelAdmin):
+    list_display = ("id", "chair", "image")
+    raw_id_fields = ("chair",)
+    list_filter = ("chair",)
+
+@admin.register(Chair)
+class Chair(admin.ModelAdmin):
+    list_display = ("id", "title", "author", "status", "created_at", "updated_at")
+    inlines = (ChairImageInline,)
+    formfield_overrides = {
+        JSONField: {'widget': JSONEditorWidget},
+    }

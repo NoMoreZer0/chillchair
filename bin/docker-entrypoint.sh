@@ -34,7 +34,7 @@ case "$1" in
         log_dir="/var/log/dramatiq"
         mkdir -p "${log_dir}"
         exec python manage.py rundramatiq \
-            --queues tickets_default tickets_healthcheck \
+            --queues default \
             --processes 3 \
             --threads 3 \
             --use-gevent \
