@@ -3,6 +3,7 @@ import hashlib
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.functional import cached_property
 
 from app.core.managers import UserManager
 
@@ -66,3 +67,28 @@ class ChairImage(TimestampMixin):
             sha256.update(chunk)
         self.image.seek(0)
         return sha256.hexdigest()[:12]
+
+
+class Rating(TimestampMixin):
+    chair = models.ForeignKey(Chair, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.FloatField(default=0)
+
+
+class Comment(TimestampMixin):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+
+    class Source(models.TextChoices):
+        Chair = "Chair"
+
+    SOURCE_DICT = {
+        "Chair": Chair,
+    }
+
+    source = models.CharField(choices=Source.choices, db_index=True, max_length=50)
+    source_id = models.BigIntegerField(db_index=True)
+
+    @cached_property
+    def source_object(self):
+        return self.SOURCE_DICT[self.source].objects.get(pk=self.source_id)
