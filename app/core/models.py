@@ -6,6 +6,7 @@ from django.db import models
 from django.utils.functional import cached_property
 
 from app.core.managers import UserManager
+from app.shared.utils import get_full_url
 
 
 class TimestampMixin(models.Model):
@@ -23,11 +24,12 @@ class TimestampMixin(models.Model):
         db_index=True,
     )
 
+
 class User(AbstractUser, TimestampMixin):
     objects = UserManager()
     email = models.EmailField(name="email", unique=True)
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []  # No extra required fields
 
     def __str__(self):
@@ -35,19 +37,42 @@ class User(AbstractUser, TimestampMixin):
 
 
 class Chair(TimestampMixin):
+    def _upload_path(self, filename):
+        _, file_name = os.path.split(self.thumbnail.name)
+        file_root, file_ext = os.path.splitext(file_name)
+        return f"chair_thumbnails/{self.id}/{file_root}.{self.image_hash()}{file_ext}"
+
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     is_active = models.BooleanField(default=False)
     specs = models.JSONField(blank=True, null=True)
     location = models.CharField(blank=True, null=True)
+    thumbnail = models.ImageField(blank=True, null=True, upload_to=_upload_path)
 
     class Status(models.TextChoices):
         draft = "draft"
         review = "review"
         published = "published"
 
-    status = models.CharField(choices=Status.choices, default=Status.draft, max_length=10)
+    status = models.CharField(
+        choices=Status.choices, default=Status.draft, max_length=10
+    )
+
+    def image_hash(self):
+        """
+        Return a hash of the file with the given name and optional content.
+        """
+        sha256 = hashlib.sha256()
+        for chunk in self.thumbnail.chunks():
+            sha256.update(chunk)
+        self.thumbnail.seek(0)
+        return sha256.hexdigest()[:12]
+
+    @property
+    def get_thumbnail(self):
+        return get_full_url(self.thumbnail) if self.thumbnail else None
+
 
 class ChairImage(TimestampMixin):
     def _upload_path(self, filename):
