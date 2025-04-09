@@ -16,3 +16,32 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
+## Swagger
+
+You can see the swagger locally by url
+
+```
+http://localhost:39000/docs/
+```
+
+## How to create superuser 
+
+1. cd inside of your project folder 
+
+```bash
+cd chillchair
+```
+
+2. create superuser with command
+
+```bash
+docker compose exec -it django-chillchair python manage.py createsuperuser
+```
+
+## Django admin url 
+
+Django admin is avaliable by url 
+
+```bash 
+http://localhost:39000/secretadmin/
+```
