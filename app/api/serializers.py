@@ -42,6 +42,10 @@ class ChairCreateSerializer(serializers.ModelSerializer):
             "specs",
         )
 
+    def create(self, validated_data):
+        validated_data["author"] = self.context["request"].user
+        chair = core_models.Chair.objects.create(**validated_data)
+        return chair
 
 class ThumbnailUploadSerializer(serializers.Serializer):
     thumbnail = serializers.ImageField()

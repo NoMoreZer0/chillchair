@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from app.api import serializers
@@ -19,10 +19,15 @@ class ChairViewSet(viewsets.ModelViewSet):
         "partial_update": serializers.ChairUpdateSerializer,
         "upload_thumbnail": serializers.ThumbnailUploadSerializer,
     }
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
     def get_serializer_class(self):
         return self.serializer_classes[self.action]
+
+    def get_permissions(self):
+        if action in ["list", "retrieve"]:
+            return [p() for p in [AllowAny]]
+        return [p() for p in self.permission_classes]
 
     @action(detail=True, methods=["post"], url_path="upload-thumbnail")
     def upload_thumbnail(self, request, pk=None):
