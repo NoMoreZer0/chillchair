@@ -16,6 +16,12 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
+3. Run migration
+
+```bash
+docker compose exec -it django-chillchair python manage.py migrate
+```
+
 ## Swagger
 
 You can see the swagger locally by url
