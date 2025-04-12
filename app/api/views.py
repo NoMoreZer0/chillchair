@@ -1,11 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from rest_framework import viewsets
+from rest_framework.viewsets import mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from app.api import serializers
+from app.api import filters
 from app.core import models as core_models
 
 
@@ -69,6 +71,29 @@ class AuthViewSet(viewsets.GenericViewSet):
 
 class ChairImageViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = core_models.ChairImage.objects.all()
+
+class CommentViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = core_models.Comment.objects.all()
+    serializer_classes = {
+        "create": serializers.CommentCreateSerializer,
+        "list": serializers.CommentSerializer,
+    }
+    filterset_class = filters.CommentFilter
+    permission_classes = (IsAuthenticated,)
+
+    def get_serializer_class(self):
+        return self.serializer_classes[self.action]
+
+    def get_permissions(self):
+        if action in ["list"]:
+            return [p() for p in [AllowAny]]
+        return [p() for p in self.permission_classes]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        comment = serializer.create(serializer.validated_data)
+        return Response(serializers.CommentSerializer(comment).data)
 
 
 def status(request):

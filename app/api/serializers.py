@@ -47,6 +47,7 @@ class ChairCreateSerializer(serializers.ModelSerializer):
         chair = core_models.Chair.objects.create(**validated_data)
         return chair
 
+
 class ThumbnailUploadSerializer(serializers.Serializer):
     thumbnail = serializers.ImageField()
 
@@ -72,6 +73,7 @@ class LoginSerializer(serializers.Serializer):
         token = Token.objects.create(user=validated_data["user"])
         return {"token": token.key}
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = core_models.User
@@ -81,6 +83,7 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
         )
+
 
 class RegisterSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -103,3 +106,28 @@ class RegisterSerializer(serializers.Serializer):
             password=validated_data["password"]
         )
         return user
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = core_models.Comment
+        fields = (
+            "id",
+            "source",
+            "source_id",
+            "message",
+            "author"
+        )
+
+class CommentCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = core_models.Comment
+        fields = (
+            "source",
+            "source_id",
+            "message"
+        )
+
+    def create(self, validated_data):
+        validated_data["author"] = self.context["request"].user
+        comment = core_models.Comment.objects.create(**validated_data)
+        return comment
