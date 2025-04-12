@@ -84,6 +84,13 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
         )
 
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = core_models.User
+        fields = (
+            "first_name",
+            "last_name",
+        )
 
 class RegisterSerializer(serializers.Serializer):
     email = serializers.EmailField()

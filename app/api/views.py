@@ -125,6 +125,30 @@ class RatingViewSet(
         rating = serializer.create(serializer.validated_data)
         return Response(serializers.RatingCreateSerializer(rating).data)
 
+class UserViewSet(viewsets.GenericViewSet):
+    queryset = get_user_model().objects.all()
+    serializer_classes = {
+        "profile": serializers.UserSerializer,
+        "profile_update": serializers.UserUpdateSerializer,
+    }
+    permission_classes = (IsAuthenticated,)
+
+    def get_serializer_class(self):
+        return self.serializer_classes[self.action]
+
+
+    @action(detail=False, methods=["get"])
+    def profile(self, request, pk=None):
+        serializer = self.get_serializer(instance=request.user)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["put"])
+    def profile_update(self, request, pk=None):
+        serializer = self.get_serializer(instance=request.user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response(serializers.UserSerializer(user).data)
+
 
 def status(request):
     # DB Health check
