@@ -20,6 +20,7 @@ class ChairViewSet(viewsets.ModelViewSet):
         "update": serializers.ChairUpdateSerializer,
         "partial_update": serializers.ChairUpdateSerializer,
         "upload_thumbnail": serializers.ThumbnailUploadSerializer,
+        "my": serializers.ChairSerializer,
     }
     permission_classes = (IsAuthenticated,)
 
@@ -44,6 +45,21 @@ class ChairViewSet(viewsets.ModelViewSet):
             chair, context={"request": request}
         )
         return Response(response_serializer.data)
+
+    @action(detail=False, methods=["get"])
+    def my(self, request, pk=None):
+        queryset = self.get_queryset().filter(author=request.user)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=["post"])
+    def submit(self, request, pk=None):
+        chair = self.get_object()
+        if chair.status != core_models.Chair.Status.draft or chair.author != request.user:
+            return Response({"error": "You can't submit this chair"})
+        chair.status = core_models.Chair.Status.review
+        chair.save()
+        return Response(serializers.ChairSerializer(chair, context={"request": request}).data)
 
 
 class AuthViewSet(viewsets.GenericViewSet):

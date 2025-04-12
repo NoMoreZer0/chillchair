@@ -31,6 +31,7 @@ class Chair(admin.ModelAdmin):
     formfield_overrides = {
         JSONField: {"widget": JSONEditorWidget},
     }
+    list_filter = ("status",)
 
 
 @admin.register(Rating)

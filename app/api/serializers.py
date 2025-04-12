@@ -11,13 +11,18 @@ class ChairSerializer(serializers.ModelSerializer):
             "id",
             "title",
             "description",
+            "status",
             "thumbnail",
             "location",
             "specs",
+            "is_author"
         )
 
     thumbnail = serializers.CharField(source="get_thumbnail")
+    is_author = serializers.SerializerMethodField()
 
+    def get_is_author(self, obj):
+        return obj.author == self.context["request"].user
 
 class ChairUpdateSerializer(serializers.ModelSerializer):
     class Meta:
