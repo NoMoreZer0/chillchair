@@ -95,9 +95,22 @@ class ChairImage(TimestampMixin):
 
 
 class Rating(TimestampMixin):
-    chair = models.ForeignKey(Chair, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.FloatField(default=0)
+
+    class Source(models.TextChoices):
+        Chair = "Chair"
+
+    SOURCE_DICT = {
+        "Chair": Chair,
+    }
+
+    source = models.CharField(choices=Source.choices, db_index=True, max_length=50)
+    source_id = models.BigIntegerField(db_index=True)
+
+    @cached_property
+    def source_object(self):
+        return self.SOURCE_DICT[self.source].objects.get(pk=self.source_id)
 
 
 class Comment(TimestampMixin):

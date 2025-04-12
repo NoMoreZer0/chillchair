@@ -87,10 +87,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class RegisterSerializer(serializers.Serializer):
     email = serializers.EmailField()
-    password = serializers.CharField(
-        write_only=True,
-        style={'input_type': 'password'}
-    )
+    password = serializers.CharField(write_only=True, style={"input_type": "password"})
 
     def validate(self, data):
         data["email"] = data["email"].lower()
@@ -102,32 +99,40 @@ class RegisterSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         user = core_models.User.objects.create_user(
-            email=validated_data["email"],
-            password=validated_data["password"]
+            email=validated_data["email"], password=validated_data["password"]
         )
         return user
+
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = core_models.Comment
-        fields = (
-            "id",
-            "source",
-            "source_id",
-            "message",
-            "author"
-        )
+        fields = ("id", "source", "source_id", "message", "author")
+
 
 class CommentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = core_models.Comment
-        fields = (
-            "source",
-            "source_id",
-            "message"
-        )
+        fields = ("source", "source_id", "message")
 
     def create(self, validated_data):
         validated_data["author"] = self.context["request"].user
         comment = core_models.Comment.objects.create(**validated_data)
         return comment
+
+
+class RatingCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = core_models.Rating
+        fields = ("source", "source_id", "rating")
+
+    def create(self, validated_data):
+        validated_data["author"] = self.context["request"].user
+        rating = core_models.Rating.objects.create(**validated_data)
+        return rating
+
+
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = core_models.Rating
+        fields = ("id", "source", "source_id", "rating")

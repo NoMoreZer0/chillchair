@@ -35,11 +35,11 @@ class Chair(admin.ModelAdmin):
 
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
-    list_display = ("id", "author", "chair", "rating")
-    raw_id_fields = ("author", "chair")
+    list_display = ("id", "author", "source", "source_id", "rating")
+    raw_id_fields = ("author",)
 
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("id", "author", "source", "message")
+    list_display = ("id", "author", "source", "source_id", "message")
     raw_id_fields = ("author",)

@@ -50,7 +50,7 @@ class AuthViewSet(viewsets.GenericViewSet):
     permission_classes = (AllowAny,)
     serializer_classes = {
         "login": serializers.LoginSerializer,
-        "register": serializers.RegisterSerializer
+        "register": serializers.RegisterSerializer,
     }
 
     def get_serializer_class(self):
@@ -69,10 +69,14 @@ class AuthViewSet(viewsets.GenericViewSet):
         user = serializer.create(serializer.validated_data)
         return Response(serializers.UserSerializer(user).data)
 
+
 class ChairImageViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = core_models.ChairImage.objects.all()
 
-class CommentViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+
+class CommentViewSet(
+    mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
+):
     queryset = core_models.Comment.objects.all()
     serializer_classes = {
         "create": serializers.CommentCreateSerializer,
@@ -94,6 +98,32 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.Ge
         serializer.is_valid(raise_exception=True)
         comment = serializer.create(serializer.validated_data)
         return Response(serializers.CommentSerializer(comment).data)
+
+
+class RatingViewSet(
+    mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
+):
+    queryset = core_models.Rating.objects.all()
+    serializer_classes = {
+        "list": serializers.RatingSerializer,
+        "create": serializers.RatingCreateSerializer,
+    }
+    filterset_class = filters.RatingFilter
+    permission_classes = (IsAuthenticated,)
+
+    def get_serializer_class(self):
+        return self.serializer_classes[self.action]
+
+    def get_permissions(self):
+        if action in ["list"]:
+            return [p() for p in [AllowAny]]
+        return [p() for p in self.permission_classes]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        rating = serializer.create(serializer.validated_data)
+        return Response(serializers.RatingCreateSerializer(rating).data)
 
 
 def status(request):
