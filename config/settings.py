@@ -99,7 +99,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 SITE_URL = "http://localhost:39000"
 
 if CONTAINER_ENVIRONMENT in ["dev"]:
-    SITE_URL = "wwww"  # Change this when deploying
+    SITE_URL = "http://165.232.79.109:39000"  # Change this when deploying
 
 SESSION_COOKIE_NAME = "stsessionid"
 
