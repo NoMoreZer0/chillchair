@@ -15,7 +15,11 @@ class ChairSerializer(serializers.ModelSerializer):
             "thumbnail",
             "location",
             "specs",
-            "is_author"
+            "is_author",
+            "longitude",
+            "latitude",
+            "city",
+            "road"
         )
 
     thumbnail = serializers.CharField(source="get_thumbnail")
@@ -45,6 +49,10 @@ class ChairCreateSerializer(serializers.ModelSerializer):
             "thumbnail",
             "location",
             "specs",
+            "longitude",
+            "latitude",
+            "city",
+            "road",
         )
 
     def create(self, validated_data):
@@ -120,6 +128,8 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = core_models.Comment
         fields = ("id", "source", "source_id", "message", "author")
+
+    author = UserSerializer(read_only=True)
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):

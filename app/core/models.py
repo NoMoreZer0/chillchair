@@ -49,6 +49,10 @@ class Chair(TimestampMixin):
     specs = models.JSONField(blank=True, null=True)
     location = models.CharField(blank=True, null=True)
     thumbnail = models.ImageField(blank=True, null=True, upload_to=_upload_path)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+    city = models.CharField(blank=True, null=True)
+    road = models.CharField(blank=True, null=True)
 
     class Status(models.TextChoices):
         draft = "draft"

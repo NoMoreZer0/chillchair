@@ -28,7 +28,7 @@ class ChairViewSet(viewsets.ModelViewSet):
         return self.serializer_classes[self.action]
 
     def get_permissions(self):
-        if action in ["list", "retrieve"]:
+        if self.action in ["list", "retrieve"]:
             return [p() for p in [AllowAny]]
         return [p() for p in self.permission_classes]
 
@@ -104,8 +104,8 @@ class CommentViewSet(
     def get_serializer_class(self):
         return self.serializer_classes[self.action]
 
-    def get_permissions(self):
-        if action in ["list"]:
+    def get_permissions(self,):
+        if self.action in ["list"]:
             return [p() for p in [AllowAny]]
         return [p() for p in self.permission_classes]
 

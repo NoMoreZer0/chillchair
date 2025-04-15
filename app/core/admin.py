@@ -25,7 +25,7 @@ class ChairImageAdmin(admin.ModelAdmin):
 
 @admin.register(Chair)
 class Chair(admin.ModelAdmin):
-    list_display = ("id", "title", "author", "status", "created_at", "updated_at")
+    list_display = ("id", "title", "author", "status", "city", "created_at", "updated_at")
     inlines = (ChairImageInline,)
     raw_id_fields = ("author",)
     formfield_overrides = {
