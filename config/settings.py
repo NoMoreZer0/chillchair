@@ -33,7 +33,7 @@ CONTAINER_ENVIRONMENT = env.str("CONTAINER_ENVIRONMENT", "local")
 BUILD_VERSION = env.str("BUILD_VERSION", "0.1.0")
 
 CSRF_TRUSTED_ORIGINS = [
-     "https://api-marsopr.site/*",
+    "https://api-marsopr.site",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
