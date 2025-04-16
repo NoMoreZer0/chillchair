@@ -36,6 +36,9 @@ CSRF_TRUSTED_ORIGINS = [
     "https://api-marsopr.site",
 ]
 
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
@@ -69,7 +72,7 @@ LANGUAGES = [
 
 # HOSTS
 # -----------------------------------------------------------------------------
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*", "https://api-marsopr.site"]
 
 # APPLICATIONS
 # -----------------------------------------------------------------------------
