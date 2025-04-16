@@ -72,7 +72,7 @@ LANGUAGES = [
 
 # HOSTS
 # -----------------------------------------------------------------------------
-ALLOWED_HOSTS = ["*", "https://api-marsopr.site"]
+ALLOWED_HOSTS = ["*"]
 
 # APPLICATIONS
 # -----------------------------------------------------------------------------
@@ -102,9 +102,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 SITE_URL = "http://localhost:39000"
 
 if CONTAINER_ENVIRONMENT in ["dev"]:
-    SITE_URL = "https://api-marsopr.site"  # Change this when deploying
-
-SESSION_COOKIE_NAME = "stsessionid"
+    SITE_URL = "https://api-marsopr.site"
 
 # SPECTACULAR_SETTINGS
 # -----------------------------------------------------------------------------
