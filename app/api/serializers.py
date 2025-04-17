@@ -37,6 +37,10 @@ class ChairUpdateSerializer(serializers.ModelSerializer):
             "thumbnail",
             "location",
             "specs",
+            "longitude",
+            "latitude",
+            "city",
+            "road",
         )
 
 
