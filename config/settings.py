@@ -34,6 +34,7 @@ BUILD_VERSION = env.str("BUILD_VERSION", "0.1.0")
 
 CSRF_TRUSTED_ORIGINS = [
     "https://api-marsopr.site",
+    "https://www.chillchair.xyz"
 ]
 
 
