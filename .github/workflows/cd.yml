@@ -23,7 +23,7 @@ jobs:
           
           cd /opt/chillchair
           git pull
-          docker compose build
+          docker compose build -t chillchair:latest
           
           echo "Build completed."
 

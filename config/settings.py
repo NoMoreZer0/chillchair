@@ -111,7 +111,7 @@ if CONTAINER_ENVIRONMENT in ["dev"]:
 SPECTACULAR_SETTINGS = {
     "SCHEMA_PATH_PREFIX": r"/api/v[0-9]",
     "TITLE": "ChillChair API",
-    "DESCRIPTION": "СhillChair backend service mars",
+    "DESCRIPTION": "СhillChair backend service ultimate",
     "SERVERS": [{"url": SITE_URL}],
     "SWAGGER_UI_SETTINGS": {
         "displayRequestDuration": True,
