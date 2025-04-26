@@ -1,4 +1,4 @@
-name: Deploy via SSH
+name: deploy
 
 on:
   push:
@@ -6,11 +6,12 @@ on:
       - main
 
 jobs:
-  deploy:
+  build:
+    name: Build Docker Images
     runs-on: ubuntu-latest
 
     steps:
-    - name: SSH into Server and Run Commands
+    - name: SSH into Server and Build
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.HOST_IP }}
@@ -18,5 +19,30 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
-          whoami
-          hostname
+          set -e
+          
+          cd /opt/chillchair
+          git pull
+          docker compose build
+          
+          echo "Build completed."
+
+  deploy:
+    name: Deploy Docker Stack
+    runs-on: ubuntu-latest
+    needs: build    # <-- wait for 'build' to finish
+    steps:
+    - name: SSH into Server and Deploy
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.HOST_IP }}
+        username: root
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        script: |
+          set -e
+          
+          cd /opt/chillchair
+          docker stack deploy -c docker-compose.yml chillchair_stack
+          
+          echo "Deployment completed."
