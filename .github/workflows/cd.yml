@@ -30,7 +30,7 @@ jobs:
   deploy:
     name: Deploy Docker Stack
     runs-on: ubuntu-latest
-    needs: build    # <-- wait for 'build' to finish
+    needs: build
     steps:
     - name: SSH into Server and Deploy
       uses: appleboy/ssh-action@v1.0.0
