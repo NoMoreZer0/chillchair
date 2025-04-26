@@ -45,4 +45,7 @@ jobs:
           cd /opt/chillchair
           docker stack deploy -c docker-compose.yml chillchair_stack
           
+          echo "Forcing Django service to restart with updated image..."
+          docker service update --force chillchair_stack_django-chillchair
+          
           echo "Deployment completed."
