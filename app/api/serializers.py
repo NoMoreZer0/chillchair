@@ -92,6 +92,12 @@ class LoginSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    groups = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="name"
+    )
+
     class Meta:
         model = core_models.User
         fields = (
@@ -99,6 +105,7 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "first_name",
             "last_name",
+            "groups",
         )
 
 class UserUpdateSerializer(serializers.ModelSerializer):
