@@ -23,6 +23,7 @@ class ChairViewSet(viewsets.ModelViewSet):
         "my": serializers.ChairSerializer,
     }
     permission_classes = (IsAuthenticated,)
+    filterset_class = filters.ChairFilter
 
     def get_serializer_class(self):
         return self.serializer_classes[self.action]

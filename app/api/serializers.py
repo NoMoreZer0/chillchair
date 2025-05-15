@@ -19,7 +19,8 @@ class ChairSerializer(serializers.ModelSerializer):
             "longitude",
             "latitude",
             "city",
-            "road"
+            "road",
+            "status",
         )
 
     thumbnail = serializers.CharField(source="get_thumbnail")
@@ -41,6 +42,7 @@ class ChairUpdateSerializer(serializers.ModelSerializer):
             "latitude",
             "city",
             "road",
+            "status",
         )
 
 

@@ -13,3 +13,8 @@ class RatingFilter(FilterSet):
     class Meta:
         model = core_models.Rating
         fields = ("source", "source_id")
+
+class ChairFilter(FilterSet):
+    class Meta:
+        model = core_models.Chair
+        fields = ("status",)
