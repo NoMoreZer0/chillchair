@@ -58,6 +58,7 @@ class Chair(TimestampMixin):
         draft = "draft"
         review = "review"
         published = "published"
+        rejected = "rejected"
 
     status = models.CharField(
         choices=Status.choices, default=Status.draft, max_length=10
