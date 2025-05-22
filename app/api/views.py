@@ -39,8 +39,6 @@ class ChairViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if self.action in ["list", "retrieve"]:
-            queryset = queryset.filter(status=core_models.Chair.Status.published)
         return queryset
 
     @action(detail=True, methods=["post"], url_path="upload-thumbnail")
